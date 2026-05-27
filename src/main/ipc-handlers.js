@@ -231,7 +231,7 @@ function registerHandlers(storage, mainWindow, scheduler, dataDir) {
 
   ipcMain.handle('settings:setAutoStart', async (_event, enabled) => {
     const { app } = require('electron');
-    app.setLoginItemSettings({ openAtLogin: !!enabled });
+    app.setLoginItemSettings({ openAtLogin: !!enabled, path: process.execPath });
     const s = _readSettings();
     s.autoStart = !!enabled;
     _writeSettings(s);

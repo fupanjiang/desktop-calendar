@@ -1,12 +1,16 @@
 // 修复：系统环境变量 ELECTRON_RUN_AS_NODE 会强制 Electron 以纯 Node.js 模式运行，
-// 导致开机自启动时 GUI 无法加载。这里先检测并重新 spawn 自身（清除该变量）。
-if (process.env.ELECTRON_RUN_AS_NODE) {
-  const { spawn } = require('child_process');
+// 导致开机自启动时 GUI 无法加载。由于该变量在 Electron 启动早期被消费，main.js
+// 中 process.env 可能已不含该键，因此采用「总在首次启动时重 spawn」策略确保环境干净。
+// __CALENDAR_RESPAWN__ 哨兵阻止无限循环。
+(function() {
+  if (process.env.__CALENDAR_RESPAWN__) return;
+  const cp = require('child_process');
   const env = { ...process.env };
   delete env.ELECTRON_RUN_AS_NODE;
-  spawn(process.execPath, [], { env, stdio: 'inherit', detached: true, windowsHide: false }).unref();
+  env.__CALENDAR_RESPAWN__ = '1';
+  cp.spawn(process.execPath, [], { env, stdio: 'inherit', detached: true, windowsHide: false }).unref();
   process.exit(0);
-}
+})();
 
 const { app, session } = require('electron');
 const path = require('path');
@@ -77,7 +81,14 @@ app.whenReady().then(async () => {
     }
   } catch (e) { /* ignore */ }
   if (settings.autoStart) {
-    app.setLoginItemSettings({ openAtLogin: true });
+    try {
+      app.setLoginItemSettings({
+        openAtLogin: true,
+        path: process.execPath,
+      });
+    } catch (e) {
+      console.error('[Main] setLoginItemSettings failed:', e);
+    }
   }
 
   windowManager = new WindowManager();
