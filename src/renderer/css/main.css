@@ -595,6 +595,26 @@ button {
   color: var(--text-muted);
 }
 
+.settings-action-btn {
+  padding: 6px 14px;
+  font-size: 12px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+.settings-action-btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+.settings-action-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
 /* Toggle switch */
 .toggle-switch {
   position: relative;

@@ -1,6 +1,6 @@
 {
   "name": "desktop-calendar",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "桌面悬浮日程表 - 支持照片、备注、语音输入、定时提醒",
   "main": "main.js",
   "scripts": {

@@ -152,6 +152,21 @@
   document.getElementById('toggleAutoStart').addEventListener('change', async (e) => {
     await api.setAutoStart(e.target.checked);
   });
+  document.getElementById('btnCreateShortcut').addEventListener('click', async () => {
+    const btn = document.getElementById('btnCreateShortcut');
+    const hint = document.getElementById('shortcutHint');
+    btn.disabled = true;
+    btn.textContent = '创建中...';
+    const result = await api.createDesktopShortcut();
+    if (result.success) {
+      hint.textContent = '快捷方式已创建 ✓';
+      btn.textContent = '已创建';
+    } else {
+      hint.textContent = '创建失败：' + (result.error || '未知错误');
+      btn.textContent = '重试';
+      btn.disabled = false;
+    }
+  });
 
   // ===== 初始加载 =====
   await loadData();

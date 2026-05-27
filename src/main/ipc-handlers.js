@@ -212,6 +212,23 @@ function registerHandlers(storage, mainWindow, scheduler, dataDir) {
     return _readSettings();
   });
 
+  ipcMain.handle('settings:createDesktopShortcut', async () => {
+    const { app, shell } = require('electron');
+    const shortcutPath = require('path').join(app.getPath('desktop'), '桌面日程.lnk');
+    try {
+      shell.writeShortcutLink(shortcutPath, 'create', {
+        target: process.execPath,
+        description: '桌面日程 — 桌面悬浮日历日程管理',
+        icon: process.execPath,
+        iconIndex: 0,
+      });
+      return { success: true, path: shortcutPath };
+    } catch (e) {
+      // writeShortcutLink 在某些版本可能不支持，回退到硬链接/复制方案
+      return { success: false, error: e.message };
+    }
+  });
+
   ipcMain.handle('settings:setAutoStart', async (_event, enabled) => {
     const { app } = require('electron');
     app.setLoginItemSettings({ openAtLogin: !!enabled });

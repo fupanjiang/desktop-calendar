@@ -20,6 +20,7 @@ contextBridge.exposeInMainWorld('calendarAPI', {
   // 设置
   getSettings: () => ipcRenderer.invoke('settings:get'),
   setAutoStart: (enabled) => ipcRenderer.invoke('settings:setAutoStart', enabled),
+  createDesktopShortcut: () => ipcRenderer.invoke('settings:createDesktopShortcut'),
 
   // 语音识别（百度 STT API + Windows SAPI 保底）
   getSttConfig: () => ipcRenderer.invoke('voice:getSttConfig'),

@@ -1,3 +1,13 @@
+// 修复：系统环境变量 ELECTRON_RUN_AS_NODE 会强制 Electron 以纯 Node.js 模式运行，
+// 导致开机自启动时 GUI 无法加载。这里先检测并重新 spawn 自身（清除该变量）。
+if (process.env.ELECTRON_RUN_AS_NODE) {
+  const { spawn } = require('child_process');
+  const env = { ...process.env };
+  delete env.ELECTRON_RUN_AS_NODE;
+  spawn(process.execPath, [], { env, stdio: 'inherit', detached: true, windowsHide: false }).unref();
+  process.exit(0);
+}
+
 const { app, session } = require('electron');
 const path = require('path');
 const { WindowManager } = require('./src/main/window-manager');
