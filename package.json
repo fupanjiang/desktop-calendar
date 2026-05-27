@@ -1,0 +1,64 @@
+{
+  "name": "desktop-calendar",
+  "version": "1.0.0",
+  "description": "桌面悬浮日程表 - 支持照片、备注、语音输入、定时提醒",
+  "main": "main.js",
+  "scripts": {
+    "start": "node start.js",
+    "build": "node build-helper.js --win portable",
+    "build:installer": "node build-helper.js --win nsis"
+  },
+  "author": "desktop-calendar",
+  "build": {
+    "appId": "com.calendar.desktop",
+    "productName": "桌面日程",
+    "directories": {
+      "output": "dist2"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "assets/**/*",
+      "node_modules/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "data",
+        "to": "data"
+      }
+    ],
+    "win": {
+      "icon": "assets/icon.png",
+      "signAndEditExecutable": false,
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-portable.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "桌面日程"
+    }
+  },
+  "devDependencies": {
+    "electron": "^35.0.0",
+    "electron-builder": "^25.0.0"
+  }
+}

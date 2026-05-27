@@ -1,0 +1,160 @@
+/* ===== 星期行 ===== */
+.weekday-row {
+  display: grid;
+  grid-template-columns: 38px repeat(7, 1fr);
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 6px 6px 4px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.week-col-head {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.weekday-row span:nth-child(2),
+.weekday-row span:nth-child(8) {
+  color: #448AFF;
+  font-weight: 700;
+  background: rgba(68, 138, 255, 0.15);
+  border-radius: 3px;
+}
+
+/* ===== 日历网格 ===== */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: 38px repeat(7, 1fr);
+  gap: 2px;
+  padding: 0 6px 4px;
+  flex: 1;
+  grid-auto-rows: 1fr;
+}
+
+/* ===== 周数单元格 ===== */
+.week-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--text-muted);
+  border-radius: 4px;
+  min-height: 0;
+}
+
+/* ===== 日期格子 ===== */
+.day-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 4px 4px 3px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: background 0.15s, border-color 0.15s;
+  min-height: 0;
+  overflow: hidden;
+}
+.day-cell:hover { background: var(--bg-hover); }
+
+.day-cell.other-month { opacity: 0.35; }
+.day-cell.other-month:hover { opacity: 0.55; }
+
+/* 今天 —— iOS 风格蓝色圆形 */
+.day-cell.today {
+  border-color: transparent;
+  background: transparent;
+}
+.day-cell.today .day-number {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  width: 24px; height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* 周末 */
+.day-cell.weekend {
+  background: rgba(68, 138, 255, 0.10);
+}
+.day-cell.weekend.other-month {
+  background: rgba(68, 138, 255, 0.04);
+}
+.day-cell.weekend:hover {
+  background: rgba(68, 138, 255, 0.18);
+}
+.day-cell.weekend .day-number {
+  color: #448AFF;
+}
+
+/* 选中 */
+.day-cell.selected {
+  border-color: var(--accent);
+  background: var(--bg-hover);
+}
+.day-cell.selected.weekend {
+  background: rgba(68, 138, 255, 0.16);
+  border-color: #448AFF;
+}
+
+/* ===== 日期数字 ===== */
+.day-number {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 2px;
+  align-self: flex-start;
+}
+
+.day-cell.other-month .day-number { color: var(--border); }
+
+/* ===== 日程文字列表 ===== */
+.day-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.day-item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 9px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+.day-item.completed {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.day-item-dot {
+  display: inline-block;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.day-more-text {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 8px;
+}

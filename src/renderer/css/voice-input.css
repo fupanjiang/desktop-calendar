@@ -1,0 +1,167 @@
+/* 导航栏语音按钮 */
+#btnVoiceNav.recording {
+  color: var(--danger) !important;
+  animation: voicePulse 1.2s infinite;
+}
+@keyframes voicePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* FAB 语音按钮 */
+.voice-fab {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 150;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+  transition: all 0.2s;
+  color: #fff;
+}
+.voice-fab:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+
+.voice-fab.listening {
+  background: var(--danger);
+  animation: pulse 1.2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(237,66,69,0.5); }
+  50% { box-shadow: 0 0 0 12px rgba(237,66,69,0); }
+}
+
+.voice-icon { font-size: 20px; line-height: 1; }
+
+.voice-overlay {
+  position: fixed;
+  bottom: 76px;
+  right: 10px;
+  left: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 12px;
+  z-index: 149;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: var(--shadow);
+}
+
+#voiceStatus {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+#voiceText {
+  font-size: 13px;
+  color: var(--text-bright);
+  font-style: italic;
+  min-height: 18px;
+}
+
+/* 语音解析预览 */
+.voice-preview {
+  position: fixed;
+  bottom: 50%;
+  right: 10px;
+  left: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 14px;
+  z-index: 160;
+  box-shadow: var(--shadow);
+}
+
+.voice-preview h4 {
+  font-size: 13px;
+  color: var(--text-bright);
+  margin-bottom: 8px;
+}
+
+.voice-preview .preview-field {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+.voice-preview .preview-field strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.voice-preview .preview-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  justify-content: flex-end;
+}
+
+/* 文本输入回退 */
+.voice-text-input-wrap {
+  position: fixed;
+  bottom: 50%;
+  right: 10px;
+  left: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 14px;
+  z-index: 160;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.voice-text-input {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+}
+.voice-text-input:focus { border-color: var(--accent); }
+.voice-text-input::placeholder {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.voice-text-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* API Key 配置 */
+.voice-apikey-wrap {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 340px;
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 16px;
+  z-index: 200;
+  box-shadow: var(--shadow);
+}
+.voice-apikey-wrap h4 {
+  font-size: 14px;
+  color: var(--text-bright);
+  margin-bottom: 4px;
+}

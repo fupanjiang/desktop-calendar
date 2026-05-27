@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>桌面日程</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/calendar.css">
+  <link rel="stylesheet" href="css/schedule-detail.css">
+  <link rel="stylesheet" href="css/voice-input.css">
+  <script>
+    const CATEGORIES = [
+      { key: 'work', label: '工作', color: '#4A90D9' },
+      { key: 'personal', label: '个人', color: '#7ED321' },
+      { key: 'health', label: '健康', color: '#F5A623' },
+      { key: 'meeting', label: '会议', color: '#BD10E0' },
+      { key: 'other', label: '其他', color: '#9B9B9B' }
+    ];
+    const REMINDER_OPTIONS = [
+      { value: 0, label: '不提醒' },
+      { value: 5, label: '提前5分钟' },
+      { value: 15, label: '提前15分钟' },
+      { value: 30, label: '提前30分钟' },
+      { value: 60, label: '提前1小时' },
+      { value: 1440, label: '提前1天' }
+    ];
+  </script>
+</head>
+<body>
+
+  <!-- 标题栏 -->
+  <header class="title-bar">
+    <span class="app-title">桌面日程</span>
+    <div class="window-controls">
+      <button id="btn-minimize" title="最小化到托盘" class="win-btn">─</button>
+      <button id="btn-close" title="关闭到托盘" class="win-btn win-btn-close">✕</button>
+    </div>
+  </header>
+
+  <!-- 导航栏 -->
+  <nav class="nav-bar">
+    <div class="nav-left">
+      <button id="btnPrevYear" class="nav-btn year-nav" title="上一年">«</button>
+      <button id="btnPrevMonth" class="nav-btn">◀</button>
+      <span id="monthYearLabel" class="month-year"></span>
+      <button id="btnNextMonth" class="nav-btn">▶</button>
+      <button id="btnNextYear" class="nav-btn year-nav" title="下一年">»</button>
+    </div>
+    <div class="nav-right">
+      <button id="btnVoiceNav" class="icon-btn" title="语音添加日程">🎤</button>
+      <button id="btnSearch" class="icon-btn" title="搜索">🔍</button>
+      <button id="btnTheme" class="icon-btn" title="切换主题">☀️</button>
+      <button id="btnSettings" class="icon-btn" title="设置">⚙</button>
+      <button id="btnToday" class="today-btn">今天</button>
+    </div>
+  </nav>
+
+  <!-- 搜索面板 -->
+  <div class="search-panel" id="searchPanel" style="display:none;">
+    <div class="search-input-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" class="search-input" placeholder="搜索日程..." autocomplete="off">
+      <button id="btnSearchClose" class="search-close">✕</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+
+  <!-- 主内容区 -->
+  <div class="app-body">
+
+    <!-- ===== 日历视图 ===== -->
+    <div class="calendar-view" id="calendarView">
+      <div class="weekday-row">
+        <span class="week-col-head">周</span>
+        <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+
+    <!-- ===== 日期详情视图 ===== -->
+    <div class="detail-view" id="detailView" style="display:none;">
+      <div class="detail-top-bar">
+        <button id="btnBackToCalendar" class="icon-btn back-btn" title="返回日历">←</button>
+        <span id="detailDateTitle" class="detail-date-title"></span>
+        <div class="detail-top-actions">
+          <button id="btnTheme2" class="icon-btn" title="切换主题">☀️</button>
+        </div>
+      </div>
+      <div class="detail-schedule-list" id="detailScheduleList"></div>
+      <div class="detail-empty" id="detailEmpty">今天没有日程安排</div>
+      <div class="detail-footer">
+        <button id="btnAddScheduleDetail" class="add-btn add-btn-block">+ 添加日程</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 日程表单弹层 -->
+  <div class="modal-overlay" id="modalOverlay" style="display:none;">
+    <div class="modal-content" id="scheduleFormContainer">
+      <div class="modal-header">
+        <h3 id="formTitle">添加日程</h3>
+        <button id="btnCloseForm" class="close-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>标题 <span class="required">*</span></label>
+          <input type="text" id="inputTitle" placeholder="日程标题" maxlength="100">
+        </div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label>日期</label>
+            <input type="date" id="inputDate">
+          </div>
+          <div class="form-group flex-1">
+            <label>分类</label>
+            <select id="inputCategory"></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label>开始时间</label>
+            <input type="time" id="inputStartTime">
+          </div>
+          <div class="form-group flex-1">
+            <label>结束时间</label>
+            <input type="time" id="inputEndTime">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>备注</label>
+          <textarea id="inputDescription" rows="3" placeholder="添加备注..." maxlength="500"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label>提醒</label>
+            <select id="inputReminder"></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>照片</label>
+          <div class="photos-area" id="photosArea">
+            <button id="btnAddPhoto" class="add-photo-btn">+ 添加照片</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btnDeleteSchedule" class="btn-delete" style="display:none;">删除</button>
+        <button id="btnCancelForm" class="btn-cancel">取消</button>
+        <button id="btnSubmitForm" class="btn-submit">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 设置弹层 -->
+  <div class="modal-overlay" id="settingsOverlay" style="display:none;">
+    <div class="modal-content settings-modal">
+      <div class="modal-header">
+        <h3>设置</h3>
+        <button id="btnCloseSettings" class="close-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-item">
+          <div class="settings-item-info">
+            <span class="settings-item-label">开机自动启动</span>
+            <span class="settings-item-hint">系统启动时自动运行桌面日程</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleAutoStart">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 语音输入按钮 -->
+  <button id="voiceBtn" class="voice-fab" title="语音输入">
+    <span class="voice-icon">🎤</span>
+  </button>
+  <div class="voice-overlay" id="voiceOverlay" style="display:none;">
+    <span id="voiceStatus">正在聆听...</span>
+    <span id="voiceText"></span>
+  </div>
+
+  <!-- 提醒弹窗 -->
+  <div class="reminder-toast" id="reminderToast" style="display:none;">
+    <div class="reminder-icon">⏰</div>
+    <div class="reminder-body">
+      <strong id="reminderTitle"></strong>
+      <span id="reminderTime"></span>
+      <span id="reminderDesc"></span>
+    </div>
+    <button id="btnDismissReminder" class="reminder-dismiss">✕</button>
+  </div>
+
+  <script src="js/ipc-client.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/calendar-renderer.js"></script>
+  <script src="js/schedule-form.js"></script>
+  <script src="js/schedule-detail.js"></script>
+  <script src="js/voice-input.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
